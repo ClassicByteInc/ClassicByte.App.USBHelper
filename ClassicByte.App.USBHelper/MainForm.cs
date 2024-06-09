@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ClassicByte.App.USBHelper
@@ -15,6 +9,22 @@ namespace ClassicByte.App.USBHelper
         public MainForm()
         {
             InitializeComponent();
+        }
+
+        private void notifyIcon1_DoubleClick(object sender, EventArgs e)
+        {
+            this.Visible = !this.Visible;
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            this.Visible = false;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            this.Visible = false;
+            e.Cancel = true;
         }
     }
 }
