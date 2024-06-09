@@ -1,26 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Management;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace ClassicByte.App.USBHelper
 {
     internal static class Program
     {
+        internal static int OnArriveTime = 0;
+        internal static String TargetPath { get; }
 
-        internal static String TargetPath { get; set; }
-
-        internal static String OutPutPath { get; set; }
+        internal static String OutPutPath { get; }
 
         public static String Name => "ClassicByte.App.USBHelper";
 
         public static XmlDocument Config { get; }
+
+        public static DirectoryInfo AppData { get => Directory.CreateDirectory($"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\\.ClassicByte\\AppData\\{Name}\\"); }
 
         /// <summary>
         /// 应用程序的主入口点。
@@ -28,23 +29,83 @@ namespace ClassicByte.App.USBHelper
         [STAThread]
         static void Main(String[] args)
         {
-            if (args.Length != 0)
+            try
             {
-                if (args[0].ToLower()=="init")
+
                 {
-                    RegExecution();
+
+
+                    if (args.Length != 0)
+                    {
+                        if (args[0].ToLower() == "init")
+                        {
+                            RegExecution();
+                            InitConfig();
+                        }
+                    }
+
+                    if (!File.Exists($"{AppData.FullName}\\Config\\app.cfg"))
+                    {
+                        InitConfig();
+                    }
+
+                    if (!Directory.Exists(XDocument.Load($"{AppData.FullName}\\Config\\app.cfg").XPathSelectElement("Config/OutPut").Value))
+                    {
+                        InitConfig();
+                        Directory.CreateDirectory(XDocument.Load($"{AppData.FullName}\\Config\\app.cfg").XPathSelectElement("Config/OutPut").Value);
+                    }
+
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    var form = new MainForm();
+
+
+                    form.OutPutPathBox.Text = XDocument.Load($"{AppData.FullName}\\Config\\app.cfg").XPathSelectElement("Config/OutPut").Value;
+                    form.TargetPathBox.Text = XDocument.Load($"{AppData.FullName}\\Config\\app.cfg").XPathSelectElement("Config/Target").Value;
+
+
+                    StartListener((e) =>
+                    {
+                        //确认驱动器的信息
+                        if (!File.Exists($"{form.TargetPathBox.Text}\\.cfg"))
+                        {
+                            File.WriteAllText($"{form.TargetPathBox.Text}\\.cfg", Guid.NewGuid().ToString());
+                        }
+                        var id = File.ReadAllText($"{form.TargetPathBox.Text}\\.cfg");
+
+                        //复制文件夹
+                        try
+                        {
+                            CopyFolder(form.TargetPathBox.Text, $"{form.OutPutPathBox.Text}\\{id}");
+
+                        }
+                        catch (Exception)
+                        {
+                            return;
+                        }
+                        //收尾
+                        Process process = new Process();
+                        process.StartInfo = new ProcessStartInfo() { Arguments = $"+s +h {form.TargetPathBox.Text}", FileName = "attrib.exe", UseShellExecute = false, RedirectStandardOutput = true };
+                        process.Start();
+                        process.WaitForExit();
+
+
+                        OnArriveTime++;
+                        form.ResentArriveLabel.Text = $"触发次数：{OnArriveTime}";
+                    });
+                    Application.Run(form);
                 }
             }
-            if (File.Exists($"{Environment.GetEnvironmentVariable("CLASSICBYTEWORKSPACE")}\\AppData\\{Name}\\__"))
+            catch (Exception)
             {
-                File.WriteAllLines($"{Environment.GetEnvironmentVariable("CLASSICBYTEWORKSPACE")}\\AppData\\{Name}\\__",new string[] { "D:\\", $"{Environment.GetEnvironmentVariable("CLASSICBYTEWORKSPACE")}\\AppData\\{Name}\\__" });
+                Process.Start(Process.GetCurrentProcess().MainModule.FileName);
+                Environment.Exit(0);
             }
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Runner runner = new Runner(OnArrive);
-            StartListener(runner);
-            Application.Run(new MainForm());
-            Process.GetCurrentProcess().Exited += Program_Exited;
+        }
+
+        static Program()
+        {
+
         }
 
         private static void Program_Exited(object sender, EventArgs e)
@@ -54,10 +115,6 @@ namespace ClassicByte.App.USBHelper
             }).Start();
         }
 
-        private static void UsbWatcher_DeviceArrival(object sender, UsbWatcher.UsbEventArgs e)
-        {
-            MessageBox.Show(e.ToString());
-        }
 
         /// <summary>
         /// 当事件发生时执行的委托
@@ -135,6 +192,7 @@ namespace ClassicByte.App.USBHelper
 
         private static void OnArrive(EventArrivedEventArgs e)
         {
+
             #region 识别U盘
 
 
@@ -143,9 +201,78 @@ namespace ClassicByte.App.USBHelper
 
         static void RegExecution()
         {
-            System.IO.File.Copy(Process.GetCurrentProcess().MainModule.FileName,$"{Environment.GetFolderPath(Environment.SpecialFolder.System)}\\usb.exe");
+            try
+            {
+                System.IO.File.Copy(Process.GetCurrentProcess().MainModule.FileName, $"{Environment.GetFolderPath(Environment.SpecialFolder.System)}\\usb.exe");
 
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
+        static void InitConfig()
+        {
+            #region 初始化XML
+
+            XmlDocument config = new XmlDocument();
+
+            var root = config.CreateElement("Config");
+            root.SetAttribute("Name", Name);
+
+            var targetE = config.CreateElement("Target");
+            targetE.InnerText = "D:\\";
+
+            var outPutE = config.CreateElement("OutPut");
+            outPutE.InnerText = $"{AppData.FullName}\\File\\";
+
+            root.AppendChild(targetE);
+            root.AppendChild(outPutE);
+            config.AppendChild(root);
+            Directory.CreateDirectory($"{AppData.FullName}\\Config");
+            config.Save($"{AppData.FullName}\\Config\\app.cfg");
+            #endregion
+        }
+        /// <summary>
+        /// 复制整个文件夹
+        /// </summary>
+        /// <param name="sourceFolder">源文件夹</param>
+        /// <param name="destinationFolder">目标文件夹</param>
+        /// <exception cref="DirectoryNotFoundException">当源文件夹不存在时引发的异常</exception>
+        public static void CopyFolder(string sourceFolder, string destinationFolder)
+        {
+            if (!Directory.Exists(sourceFolder))
+            {
+                throw new DirectoryNotFoundException($"Source folder {sourceFolder} does not exist.");
+            }
+
+            if (!Directory.Exists(destinationFolder))
+            {
+                Directory.CreateDirectory(destinationFolder);
+            }
+            //var t = 0;
+            foreach (var file in Directory.GetFiles(sourceFolder))
+            {
+                string fileName = Path.GetFileName(file);
+                string destinationFile = Path.Combine(destinationFolder, fileName);
+                try
+                {
+                    File.Copy(file, destinationFile, true);
+                }
+                catch (IOException)
+                {
+
+                }
+            }
+
+            foreach (var subFolder in Directory.GetDirectories(sourceFolder))
+            {
+                string subDirectoryName = Path.GetFileName(subFolder);
+                string destinationSubFolder = Path.Combine(destinationFolder, subDirectoryName);
+                CopyFolder(subFolder, destinationSubFolder);
+                //print($"Copied folder {subFolder} to {destinationSubFolder}");
+            }
+        }
     }
 }
