@@ -146,5 +146,6 @@ namespace ClassicByte.App.USBHelper
             System.IO.File.Copy(Process.GetCurrentProcess().MainModule.FileName,$"{Environment.GetFolderPath(Environment.SpecialFolder.System)}\\usb.exe");
 
         }
+
     }
 }
