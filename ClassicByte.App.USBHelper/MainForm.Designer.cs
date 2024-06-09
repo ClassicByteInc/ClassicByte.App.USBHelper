@@ -33,39 +33,43 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.ArriveTimeLabel = new System.Windows.Forms.Label();
+            this.ResentArriveLabel = new System.Windows.Forms.Label();
             this.flowLayoutPanel9 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel8 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.TargetPathBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.OutPutPathBox = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.TargetPathBox = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.label4 = new System.Windows.Forms.Label();
-            this.ResentArriveLabel = new System.Windows.Forms.Label();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.ArriveTimeLabel = new System.Windows.Forms.Label();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel5.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // notifyIcon1
             // 
+            this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
             this.notifyIcon1.Text = "Watching";
             this.notifyIcon1.Visible = true;
@@ -104,6 +108,40 @@
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
             this.tableLayoutPanel4.Size = new System.Drawing.Size(352, 305);
             this.tableLayoutPanel4.TabIndex = 2;
+            // 
+            // tableLayoutPanel5
+            // 
+            this.tableLayoutPanel5.ColumnCount = 1;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.Controls.Add(this.ArriveTimeLabel, 0, 1);
+            this.tableLayoutPanel5.Controls.Add(this.ResentArriveLabel, 0, 0);
+            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.RowCount = 2;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(346, 280);
+            this.tableLayoutPanel5.TabIndex = 3;
+            this.tableLayoutPanel5.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel5_Paint);
+            // 
+            // ArriveTimeLabel
+            // 
+            this.ArriveTimeLabel.AutoSize = true;
+            this.ArriveTimeLabel.Location = new System.Drawing.Point(3, 140);
+            this.ArriveTimeLabel.Name = "ArriveTimeLabel";
+            this.ArriveTimeLabel.Size = new System.Drawing.Size(111, 24);
+            this.ArriveTimeLabel.TabIndex = 1;
+            this.ArriveTimeLabel.Text = "触发次数：0";
+            // 
+            // ResentArriveLabel
+            // 
+            this.ResentArriveLabel.AutoSize = true;
+            this.ResentArriveLabel.Location = new System.Drawing.Point(3, 0);
+            this.ResentArriveLabel.Name = "ResentArriveLabel";
+            this.ResentArriveLabel.Size = new System.Drawing.Size(154, 24);
+            this.ResentArriveLabel.TabIndex = 0;
+            this.ResentArriveLabel.Text = "最近一次的输出：";
             // 
             // flowLayoutPanel9
             // 
@@ -157,6 +195,32 @@
             this.flowLayoutPanel5.Size = new System.Drawing.Size(574, 123);
             this.flowLayoutPanel5.TabIndex = 2;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(118, 24);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "输出文件夹：";
+            // 
+            // OutPutPathBox
+            // 
+            this.OutPutPathBox.Location = new System.Drawing.Point(3, 27);
+            this.OutPutPathBox.Name = "OutPutPathBox";
+            this.OutPutPathBox.Size = new System.Drawing.Size(509, 31);
+            this.OutPutPathBox.TabIndex = 3;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(3, 64);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(116, 41);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "选择";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // flowLayoutPanel4
             // 
             this.flowLayoutPanel4.Controls.Add(this.label2);
@@ -166,6 +230,23 @@
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(574, 112);
             this.flowLayoutPanel4.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(118, 24);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "目标驱动器：";
+            // 
+            // TargetPathBox
+            // 
+            this.TargetPathBox.Location = new System.Drawing.Point(127, 3);
+            this.TargetPathBox.Name = "TargetPathBox";
+            this.TargetPathBox.Size = new System.Drawing.Size(304, 31);
+            this.TargetPathBox.TabIndex = 1;
+            this.TargetPathBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // tableLayoutPanel2
             // 
@@ -201,6 +282,15 @@
             this.flowLayoutPanel2.Size = new System.Drawing.Size(346, 123);
             this.flowLayoutPanel2.TabIndex = 1;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(3, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(218, 24);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "绑定的事件：CopyFolder";
+            // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.label1);
@@ -216,99 +306,28 @@
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(320, 62);
+            this.label1.Size = new System.Drawing.Size(279, 24);
             this.label1.TabIndex = 0;
             this.label1.Text = "USB Watcher(基于WMIC与.NET)";
             // 
-            // label2
+            // contextMenuStrip1
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(158, 31);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "目标驱动器：";
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.退出ToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(117, 34);
             // 
-            // TargetPathBox
+            // 退出ToolStripMenuItem
             // 
-            this.TargetPathBox.Location = new System.Drawing.Point(167, 3);
-            this.TargetPathBox.Name = "TargetPathBox";
-            this.TargetPathBox.Size = new System.Drawing.Size(304, 39);
-            this.TargetPathBox.TabIndex = 1;
-            this.TargetPathBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(158, 31);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "输出文件夹：";
-            // 
-            // OutPutPathBox
-            // 
-            this.OutPutPathBox.Location = new System.Drawing.Point(3, 34);
-            this.OutPutPathBox.Name = "OutPutPathBox";
-            this.OutPutPathBox.Size = new System.Drawing.Size(509, 39);
-            this.OutPutPathBox.TabIndex = 3;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(3, 79);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(116, 41);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "选择";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(289, 31);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "绑定的事件：CopyFolder";
-            // 
-            // ResentArriveLabel
-            // 
-            this.ResentArriveLabel.AutoSize = true;
-            this.ResentArriveLabel.Location = new System.Drawing.Point(3, 0);
-            this.ResentArriveLabel.Name = "ResentArriveLabel";
-            this.ResentArriveLabel.Size = new System.Drawing.Size(206, 31);
-            this.ResentArriveLabel.TabIndex = 0;
-            this.ResentArriveLabel.Text = "最近一次的输出：";
-            // 
-            // tableLayoutPanel5
-            // 
-            this.tableLayoutPanel5.ColumnCount = 1;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.Controls.Add(this.ArriveTimeLabel, 0, 1);
-            this.tableLayoutPanel5.Controls.Add(this.ResentArriveLabel, 0, 0);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 2;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(346, 280);
-            this.tableLayoutPanel5.TabIndex = 3;
-            this.tableLayoutPanel5.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel5_Paint);
-            // 
-            // ArriveTimeLabel
-            // 
-            this.ArriveTimeLabel.AutoSize = true;
-            this.ArriveTimeLabel.Location = new System.Drawing.Point(3, 140);
-            this.ArriveTimeLabel.Name = "ArriveTimeLabel";
-            this.ArriveTimeLabel.Size = new System.Drawing.Size(148, 31);
-            this.ArriveTimeLabel.TabIndex = 1;
-            this.ArriveTimeLabel.Text = "触发次数：0";
+            this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
+            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(116, 30);
+            this.退出ToolStripMenuItem.Text = "退出";
+            this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 31F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(944, 573);
             this.Controls.Add(this.tableLayoutPanel1);
@@ -320,6 +339,8 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel5.ResumeLayout(false);
             this.flowLayoutPanel5.PerformLayout();
@@ -330,8 +351,7 @@
             this.flowLayoutPanel2.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel5.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -361,6 +381,8 @@
         internal System.Windows.Forms.Label ResentArriveLabel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.Label ArriveTimeLabel;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem 退出ToolStripMenuItem;
     }
 }
 

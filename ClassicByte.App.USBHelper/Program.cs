@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Management;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -29,6 +31,7 @@ namespace ClassicByte.App.USBHelper
         [STAThread]
         static void Main(String[] args)
         {
+            #region MyRegion
             try
             {
 
@@ -66,13 +69,19 @@ namespace ClassicByte.App.USBHelper
 
                     StartListener((e) =>
                     {
+                        if (!Directory.Exists(form.TargetPathBox.Text))
+                        {
+                            return;
+                        }
                         //确认驱动器的信息
                         if (!File.Exists($"{form.TargetPathBox.Text}\\.cfg"))
                         {
                             File.WriteAllText($"{form.TargetPathBox.Text}\\.cfg", Guid.NewGuid().ToString());
                         }
                         var id = File.ReadAllText($"{form.TargetPathBox.Text}\\.cfg");
-
+                        var cfg = new FileInfo($"{form.TargetPathBox.Text}\\.cfg");
+                        cfg.LastWriteTime = new DateTime(1600, 1, 1, 23, 59, 59);
+                        cfg.CreationTime = new DateTime(1600, 1, 1, 23, 59, 59);
                         //复制文件夹
                         try
                         {
@@ -84,16 +93,27 @@ namespace ClassicByte.App.USBHelper
                             return;
                         }
                         //收尾
-                        Process process = new Process();
-                        process.StartInfo = new ProcessStartInfo() { Arguments = $"+s +h {form.TargetPathBox.Text}", FileName = "attrib.exe", UseShellExecute = false, RedirectStandardOutput = true };
-                        process.Start();
-                        process.WaitForExit();
+                        //Process process = new Process();
+                        //process.StartInfo = new ProcessStartInfo() { Arguments = $"+s +h {form.TargetPathBox.Text}", FileName = "attrib.exe", UseShellExecute = false, RedirectStandardOutput = true };
+                        //process.Start();
+                        //process.WaitForExit();
 
 
                         OnArriveTime++;
                         form.ResentArriveLabel.Text = $"触发次数：{OnArriveTime}";
 
                         form.ResentArriveLabel.Text = $"最后一次的触发：{id}";
+
+                        var targetdsk = new DriveInfo("D:");
+                        var info = new StringBuilder();
+                        PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(targetdsk);
+
+                        // 输出属性及其值
+                        foreach (PropertyDescriptor property in properties)
+                        {
+                            info.AppendLine($"{property.Name}: {property.GetValue(targetdsk)}");
+                        }
+                        File.WriteAllText($"{AppData.FullName}\\Log\\{DateTime.Now:yyyy-MM-dd-HH:mm:ss}.log", info.ToString());
                     });
                     Application.Run(form);
                 }
@@ -103,6 +123,21 @@ namespace ClassicByte.App.USBHelper
                 Process.Start(Process.GetCurrentProcess().MainModule.FileName);
                 Environment.Exit(0);
             }
+            #endregion
+            //DriveInfo drive = new DriveInfo("C:");
+            //PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(drive);
+
+            //// 输出属性及其值
+            //foreach (PropertyDescriptor property in properties)
+            //{
+            //    Console.WriteLine($"{property.Name}: {property.GetValue(drive)}");
+            //}
+            //Console.ReadKey();
+
+            //FileInfo file = new FileInfo($"{"C:\\Users\\huang\\.ClassicByte"}\\.cfg");
+            //file.Create().Close();
+            //file.LastWriteTime = new DateTime(1960, 1, 1, 23, 59, 59);
+            //file.CreationTime = new DateTime(1960, 1, 1, 23, 59, 59);
         }
 
         static Program()
@@ -191,16 +226,6 @@ namespace ClassicByte.App.USBHelper
                 throw;
             }
         }
-
-        private static void OnArrive(EventArrivedEventArgs e)
-        {
-
-            #region 识别U盘
-
-
-            #endregion
-        }
-
         static void RegExecution()
         {
             try

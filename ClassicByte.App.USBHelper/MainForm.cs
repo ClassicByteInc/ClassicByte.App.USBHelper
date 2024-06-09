@@ -50,5 +50,10 @@ namespace ClassicByte.App.USBHelper
         {
 
         }
+
+        private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
     }
 }
